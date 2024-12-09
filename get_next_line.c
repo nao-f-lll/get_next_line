@@ -12,29 +12,57 @@
 
 #include "get_next_line.h"
 
-#define BUF_SIZE 3
+#define BUF_SIZE 4
 
-void	read_to_buf_size(int fd)
+void	trim_stash(char *stash, char *line)
 {
-	char *buf = (char*) malloc(BUF_SIZE * sizeof(char));
-	static char  *stash;
-	ssize_t num_read = read(fd, buf, BUF_SIZE);
-	stash = ft_strdup(buf);
-	while (read(fd, buf, BUF_SIZE) > 0)
-		stash = ft_strjoin(stash, buf);	
-	printf("%s", stash);
-	free(buf);
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	if (!stash)
+		return;
+	while (stash[i] != '\n')
+		i++;
+	while (stash[i + j] != '\0')
+		j++;
+
+	line = (char *) ft_calloc(ft_strlen(stash) - j + 2, sizeof(char));
+	ft_strlcpy(line, stash, i);
 }
+
 
 char	*get_next_line(int fd)
 {
-	read_to_buf_size(fd);
+	static char *stash;
+	char	*line;
+	char	*temp_stash;
+	char	buf[BUF_SIZE];
+	int	num_read;
+	
+	num_read = 1;
+	if (!stash)
+		stash =(char *) ft_calloc(1, sizeof(char));
+
+	while (0 < num_read && !ft_strchr(stash, '\n'))
+	{
+		num_read = read(fd, buf, BUF_SIZE);
+		buf[num_read] = '\0';
+		temp_stash = ft_strjoin(stash, buf);
+		stash = temp_stash;
+	}
+	trim_stash(stash, line);
+	//print_line();
+	//printf("%s", stash);
+	//free(stash);
+	printf("%s", line);
 	return (NULL);
 }
 
-int	main(void)
+int	main(int argc, char **argv)
 {
-	int	fd = open("file1.txt", O_RDONLY);
+	int	fd = open(argv[1], O_RDONLY);
 	get_next_line(fd);
 	close(fd);
 	return (0);
