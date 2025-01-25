@@ -6,7 +6,7 @@
 /*   By: nlyamani <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:34:41 by nlyamani          #+#    #+#             */
-/*   Updated: 2024/12/02 17:35:46 by nlyamani         ###   ########.fr       */
+/*   Updated: 2025/01/25 13:35:08 by nlyamani         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char const *s2)
 {
 	char	*str;
 	int		s1_s;
@@ -100,6 +100,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	ft_memcpy(str, s1, s1_s);
 	ft_memcpy(str + s1_s, s2, s2_s);
 	str[s1_s + s2_s] = '\0';
+	free(s1);
 	return (str);
 }
 
